@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: environment-for-database
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python manage.py runserver"
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromSecret: DATABASE_URL
+      - key: ADMIN_USERNAME
+        fromSecret: ADMIN_USERNAME
+      - key: ADMIN_PASSWORD
+        fromSecret: ADMIN_PASSWORD
+    plan: free

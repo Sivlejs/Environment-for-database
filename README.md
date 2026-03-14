@@ -90,11 +90,32 @@ docker compose down -v
 
 ---
 
+## Deploying on Render
+
+A `render.yaml` file is included at the root of the repository. It defines a web service that connects to the shared Celestal backend database and exposes CRUD routes for the `users`, `subscriptions`, and `payments` tables.
+
+### Required secrets
+
+Before deploying, add the following secrets in the Render dashboard (**Environment → Secret Files / Environment Variables**):
+
+| Secret key | Description |
+|------------|-------------|
+| `DATABASE_URL` | Full PostgreSQL connection string (e.g. `postgresql://user:pass@host:5432/db`) |
+| `ADMIN_USERNAME` | Admin username for authenticated access |
+| `ADMIN_PASSWORD` | Admin password for authenticated access |
+
+Once the secrets are set, push to the `main` branch — Render will pick up the `render.yaml` and deploy the service automatically (`autoDeploy: true`).
+
+> **Note:** The `startCommand` in `render.yaml` uses Django's built-in development server (`manage.py runserver`). For a hardened production deployment, replace it with a WSGI server such as Gunicorn (e.g. `gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT`).
+
+---
+
 ## Project structure
 
 ```
 .
-├── docker-compose.yml   # Service definitions (PostgreSQL + Adminer)
+├── render.yaml          # Render deployment configuration
+├── docker-compose.yml   # Service definitions (PostgreSQL + Adminer) for local dev
 ├── .env.example         # Environment variable template
 ├── init/
 │   └── 01_schema.sql    # Initial schema + seed data (auto-applied on first start)
