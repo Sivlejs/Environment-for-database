@@ -7,9 +7,9 @@ services:
     autoDeploy: true
     envVars:
       - key: DATABASE_URL
-        fromSecret: DATABASE_URL
+        value: "<your-database-url>" # Replace with the actual database URL
       - key: ADMIN_USERNAME
-        fromSecret: ADMIN_USERNAME
+        value: "<your-admin-username>" # Replace with an example username
       - key: ADMIN_PASSWORD
-        fromSecret: ADMIN_PASSWORD
+        value: "<your-admin-password>" # Replace with the actual admin password
     plan: free
