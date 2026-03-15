@@ -5,12 +5,6 @@ import os
 app = Flask(__name__)
 
 
-# Establish database connection using environment variable
-def get_db_connection():
-    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
-    return conn
-
-
 @app.route("/")
 def home():
     return "Hello, Render!"
@@ -20,15 +14,32 @@ def home():
 def get_users():
     conn = None
     try:
-        conn = get_db_connection()
+        # Log database URL retrieval
+        db_url = os.getenv("DATABASE_URL")
+        if not db_url:
+            print("DATABASE_URL is not set.")
+            return jsonify({"error": "DATABASE_URL is not set."}), 500
+
+        print(f"Connecting to database with URL: {db_url}")
+        conn = psycopg2.connect(db_url)
+
         with conn.cursor() as cur:
-            cur.execute("SELECT * FROM users;")
+            query = "SELECT * FROM users;"
+            print(f"Executing query: {query}")
+            cur.execute(query)
             rows = cur.fetchall()
+            print(f"Query results: {rows}")
+
         return jsonify(rows)
+    except psycopg2.DatabaseError as db_error:
+        print(f"Database connection error: {db_error}")
+        return jsonify({"database_error": str(db_error)}), 500
     except Exception as e:
+        print(f"Unexpected error: {e}")
         return jsonify({"error": str(e)}), 500
     finally:
-        if conn is not None:
+        if conn:
+            print("Closing database connection.")
             conn.close()
 
 
