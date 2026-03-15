@@ -106,7 +106,7 @@ Before deploying, add the following secrets in the Render dashboard (**Environme
 
 Once the secrets are set, push to the `main` branch — Render will pick up the `render.yaml` and deploy the service automatically (`autoDeploy: true`).
 
-> **Note:** The `startCommand` in `render.yaml` uses Django's built-in development server (`manage.py runserver`). For a hardened production deployment, replace it with a WSGI server such as Gunicorn (e.g. `gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT`).
+> **Note:** The `startCommand` in `render.yaml` uses Gunicorn (`gunicorn manage:app`) to serve the Flask application in production.
 
 ---
 

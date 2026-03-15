@@ -2,6 +2,7 @@ services:
   - type: web
     name: environment-for-database
     env: python
+    pythonVersion: "3.10.0"
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
