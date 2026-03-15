@@ -1,11 +1,11 @@
-import os
-
-import psycopg2
 from flask import Flask, jsonify
+import psycopg2
+import os
 
 app = Flask(__name__)
 
 
+# Establish database connection using environment variable
 def get_db_connection():
     conn = psycopg2.connect(os.getenv("DATABASE_URL"))
     return conn
@@ -18,16 +18,18 @@ def home():
 
 @app.route("/users")
 def get_users():
+    conn = None
     try:
         conn = get_db_connection()
-        with conn:
-            with conn.cursor() as cur:
-                cur.execute("SELECT * FROM users;")
-                rows = cur.fetchall()
-        conn.close()
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM users;")
+            rows = cur.fetchall()
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn is not None:
+            conn.close()
 
 
 if __name__ == "__main__":
