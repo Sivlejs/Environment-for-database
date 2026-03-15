@@ -2,7 +2,7 @@ services:
   - type: web
     name: environment-for-database
     env: python
-    pythonVersion: "3.10.0"
+    pythonVersion: "3.12.0"
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
@@ -15,4 +15,6 @@ services:
         value: "<your-admin-username>" # Replace with an example username
       - key: ADMIN_PASSWORD
         value: "<your-admin-password>" # Replace with the actual admin password
+      - key: PYTHON_VERSION
+        value: "3.12.0"
     plan: free
